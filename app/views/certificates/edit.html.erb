@@ -1,0 +1,24 @@
+<div class="container">
+<div class="card mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Documento firmado</a></li>
+          <li class="breadcrumb-item active">Editar documento firmado </li>
+        </ol>
+        
+<h5 class="text">Editar documento firmado </h5>
+</div>
+ <div class="probar">
+
+ <%= render "form", certificate: @certificate %>
+
+<br>
+
+<div>
+<%= link_to "Ver documento", @certificate %> |
+<%= link_to "Regresar a constancias firmadas", certificates_path %>
+</div>
+
+
+
+

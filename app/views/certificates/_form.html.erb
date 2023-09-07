@@ -1,0 +1,38 @@
+<%= form_with(model: certificate) do |form| %>
+  <% if certificate.errors.any? %>
+    <div style="color: red">
+      
+    <div id="error_explanation">
+     <ul>
+      <% certificate.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="form-group row hidden-div">
+    <%= form.label :payment_id,"ID",class:'col-sm-2' %>
+    <div class="col-sm-4">
+    <% if @payment %>
+    <%= form.hidden_field :payment_id, value: @payment.id %>
+  <% end %>
+  
+  </div>
+  </div>
+
+<p></p>
+<div class="form-group row">
+    <%= form.label :uploads,"Subir documento" ,class:'col-sm-2'%>
+    <div class="col-sm-4">
+    <%= form.file_field :uploads, multiple: true, class: "form-control" %>
+  </div>
+  </div>
+
+
+  
+  <%= form.hidden_field :status, value: false %>
+  <%= form.submit "Guardar", data: { confirm: '¿Estás seguro de actualizar el estado del certificado?' }, class: 'btn btn-info' do %>
+    <a href="<%= update_status_certificate_path(certificate) %>">Actualizar estado</a>
+    <% end %>
+<% end %>

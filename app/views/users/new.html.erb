@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="card mt-5">
+    <div class="card-header">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="">Usuario</a></li>
+        <li class="breadcrumb-item active">Nuevo usuario</li>
+      </ol>
+
+      <h5 class="text">Nuevo Usuario </h5>
+    </div>
+    <div class="probar">
+      <br>
+
+      <%= form_for @user ,url: {action: :create}  do |f| %>
+      <%= token_tag nil %>
+      <%= "<div>#{@user.errors.full_messages.first}</div>".html_safe if @user.errors.any? %>
+
+      <div class="form-group row">
+        <%= f.label :nombre, "Nombre:", class:'col-sm-3'  %><br />
+        <div class="col-sm-5">
+          <%= f.text_field :nombre, class:"form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <%= f.label :apellidouno, "Apellido Paterno:", class:'col-sm-3'  %><br />
+        <div class="col-sm-5">
+          <%= f.text_field :apellido_uno, class:"form-control" %>
+        </div>
+      </div>
+      <div class="form-group row">
+        <%= f.label :apellidodos, "Apellido Materno:", class:'col-sm-3'  %><br />
+        <div class="col-sm-5">
+          <%= f.text_field :apellido_dos, class:"form-control" %>
+        </div>
+      </div>
+       
+          <div class="form-group row">
+          <%= f.label :role, "Rol:", class:'col-sm-3'  %><br />
+          <div class="col-sm-5">
+            <%= f.select :role, ["administrador", "ingles", "financieros","servicios","direccion","gestion","subdireccion", "titulacion" ], prompt: "Seleccione el rol" , class: "input"%>
+          </div>
+        </div>
+        <div class="form-group row">
+          <%= f.label :email, "Correo:", class:'col-sm-3'  %><br />
+          <div class="col-sm-5">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"form-control"  %>
+          </div>
+        </div>
+        <div class="form-group row">
+          <%= f.label :password, "Contraseña:", class:'col-sm-3'  %>
+          <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> Caracteres minimo)</em>
+          <% end %><br />
+          <div class="col-sm-5">
+            <%= f.password_field :password, autocomplete: "new-password", class:"form-control"  %>
+          </div>
+        </div>
+        <div class="form-group row">
+          <%= f.label :password_confirmation, "Confirma Contraseña:", class:'col-sm-3' %><br />
+          <div class="col-sm-5">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"form-control"  %>
+          </div>
+        </div>
+        <br>
+        </br>
+        <div>
+          <button class="btn btn-info  btn-xs round btn-guardar" <%= f.submit %>Guardar </button>
+            <%= link_to 'Cancelar', users_path, class: "btn btn-warning btn-xs round btn-cancelar"%>
+            <br>
+            </br>
+        </div>
+        <% end %>
+        </form>
+
+        <script>
+          function mayus(e) {
+            e.value = e.value.toUpperCase();
+          }
+        </script>

@@ -1,0 +1,18 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  serial: MyString
+  no_oficio: MyString
+  asunto: ingles
+  plan: MyString
+  nombre: MARCOS ÁNGEL JIMÉNEZ MIGUEL
+  numero_de_control: MyString
+  carrera: MyString
+  nivel: MyString
+  periodo: MyString
+  fecha: 2023-04-19
+  md5: MyString
+  cadena_comprobacion: MyString
+  referencia: MyString
+  user_id: 1
+  

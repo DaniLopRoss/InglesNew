@@ -1,0 +1,280 @@
+<head>
+  <%= stylesheet_link_tag "style" %>
+  <img src="/assets/logo.png" alt="Logo" class="logo-hidden">
+  <img src="/assets/logo2.png" alt="Logo2" class="logo-hidden">
+</head>
+<div align="center">
+  <p style="color: green"><%= notice %></p>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Constancias pagadas</a></li>
+    <li class="breadcrumb-item active">Listar constancias pagadas</li>
+  </ol>
+  <h4 class="consI">CONSTANCIAS INVÁLIDAS</h4>
+
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+
+        <p class="card-description">
+
+        </p>
+        <div class="table-responsive pt-3">
+
+          <table class="table table-bordered" id="tabladocumentos">
+            <thead class="thead-blue">
+
+              <tr>
+                <th>No.</th>
+                <% if current_user.role == "direccion" || current_user.role == 'ingles' %>
+                <th scope="col">No.Folio</th>
+                <% end %>
+                <th scope="col">Número de control</th>
+                <th>Nombre</th>
+
+                <% if current_user.role == "financieros"|| current_user.role == 'direccion' %>
+                <th>Constancia </th>
+                <% end %>
+                <% if current_user.role != "direccion" %>
+                <th>Referencia de pago</th>
+                <% end %>
+                <th>Estatus</th>
+
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <% @payments.each do |payment|%>
+            <tr>
+              <td></td>
+              <% if current_user.role == "direccion" || current_user.role == 'ingles'  %>
+              <td><%= payment.documento.no_oficio %></td>
+              <% end %>
+              <td><%= payment.documento.numero_de_control %></td>
+
+              <td><%= payment.documento.nombre  %></td>
+
+              <% if current_user.role == "financieros" || current_user.role == 'direccion'%>
+              <td><% payment.documento.uploads.each do |document| %>
+                <p><%= document.filename.to_s %></p>
+                <%= link_to '', rails_blob_path(document.blob, disposition: 'attachment'), target: '_blank', class: 'bi bi-download download-icon tooltip-test', title: 'Descargar' %>
+                <%= link_to '', rails_blob_path(document.blob, disposition: 'inline'), target: '_blank', class: 'bi bi-file-earmark-pdf pdf-icon' %>
+
+                <% end %>
+              </td>
+              <%end%>
+              <% if current_user.role != "direccion" %>
+              <td><%= payment.referencia %></td>
+              <%end%>
+
+              <td><%= payment.status %></td>
+              <td>
+
+               
+             
+
+              <div style="display: flex; gap: 10px; align-items: center;">
+              <% if current_user.role == "subdireccion" || current_user.role == "ingles" || current_user.role == "direccion" %>
+                <% if current_user.role == "subdireccion"  || current_user.role == "direccion" %>
+                  <%= form_for(payment, url: payment_path(payment), method: :patch) do |f| %>
+                    <% if payment.commentp.present? %>
+                      <%= f.check_box :verificarsub, { class: 'form-check-input check', onchange: 'this.form.submit()', disabled: true } %>
+                      <i class="bi bi-exclamation-triangle text-danger"></i>
+                    <% else %>
+                      <%= f.check_box :verificarsub, { class: 'form-check-input check', onchange: 'this.form.submit()' } %>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%= form_for(payment) do |f| %>
+                    <%= f.check_box :verificarsub, { class: 'form-check-input', disabled: true } %>
+                  <% end %>
+                <% end %>
+              <% end %>
+                    
+
+                    
+                    <a class="mostrar" <%= link_to ({:action => :show, :id => payment.id}) do %><i
+                      class="bi bi-eye-fill"></i><%end%></a>
+                    <% if current_user.role == 'administrador'%>
+                    <a href="<%= edit_payment_path(payment)%>" class="edit"><i class="bi bi-pencil-square"></i></a>
+                    <% end %>
+                    <%  if can? :destroy, @user %>
+                    <a class="eliminar" <%= link_to ({ :action => :destroy, :id => payment.id })do%> <i
+                      class="bi bi-trash"></i>
+                      <%end%>
+                      <% end %>
+                    </a>
+                    <% if current_user.role == "financieros" && payment.status != "PAGADO" %>
+                    <%= link_to 'Agregar Pago', new_payment_path(payment_id: payment.id) %>
+                    <% elsif current_user.role == "ingles" && payment.verificar != "true" %>
+                    <%= link_to 'Documento firmado', new_certificate_path(payment_id: payment.id) %>
+                    <% end %>
+
+              </td>
+            </tr>
+            <%end %>
+            <% if current_user.role == "financieros" || current_user.role == 'administrador' %>
+
+            <a href="<%= documentos_path%>" class="new"><i class="bi bi-plus-circle-fill"></i></a>
+            <%end %>
+
+            <% if current_user.role == "ingles"%>
+            <%= link_to 'Constancias firmadas', certificates_path %>
+            <%end %>
+           
+            <% if current_user.role == "ingles"%>
+            <%= link_to ' | Regresar a inglés', documentos_path %>
+            <%end %>
+
+            <% if current_user.role == "direccion"%>
+            <%= link_to "Lista de documentos verificados", verified_documents_path %>
+            <%end %>
+
+            <% if current_user.role == "subdireccion" %>
+              <%= link_to 'Lista de documentos verificados', verified_subdireccion_path %>
+              <%end %>
+
+            <script>
+              $(document).ready(function() {
+                var logo = '/assets/logo.png';
+                var logo2 = '/assets/logo2.png';
+                var printableColumns = ':not(:last-child)';
+                var leyenda = 'TECNOLÓGICO NACIONAL DE MÉXICO';
+                var leyenda1 = 'Instituto Tecnológico de Oaxaca';
+                var oTable = $("#tabladocumentos").DataTable({
+                  language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.1/i18n/es-MX.json'
+                  },
+                  autoWidth: false, // desactivar ajuste automático de ancho
+                  order: [
+                    [1, 'asc']
+                  ],
+                  responsive: "true",
+                  dom: 'Bfrtilp',
+                  buttons: [{
+                      extend: 'excelHtml5',
+                      text: '<i class="bi bi-file-earmark-excel"></i> ',
+                      titleAttr: 'Exportar a Excel',
+                      title: 'Constancias de inglés',
+                      className: 'btn btn-success',
+                      exportOptions: {
+                        columns: ':not(:nth-last-child(-n+2))' // Excluir las dos últimas columnas
+                      }
+                    },
+                    {
+                      extend: 'pdfHtml5',
+                      text: '<i class="bi bi-file-earmark-pdf"></i> ',
+                      titleAttr: 'Exportar a PDF',
+                      className: 'btn btn-danger',
+                      title: 'Constancias de inglés',
+                      customize: function(doc) {
+                        var table = doc.content[1].table;
+                        var columnWidths = ['5%', '17%', '30%', '35%', '30%'];
+                        doc.content[0].fontSize = 12;
+                        doc.content[0].alignment = 'center';
+                        doc.content[0].absolutePosition = {
+                          x: 32,
+                          y: 110
+                        };
+                        doc.content[0].width = '100%';
+                        doc.content[1].margin = [5, 40, 60, 500]; //tabla 40 arriba
+                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join(
+                          '*').split('');
+                        table.widths = columnWidths;
+                        var rowCount = doc.content[1].table.body.length;
+                        doc.content[1].table.alignment = 'center';
+                        var img1 = new Image();
+                        img1.src = logo;
+                        var imgData1 = getBase64Image(img1);
+                        var img2 = new Image();
+                        img2.src = logo2;
+                        var imgData2 = getBase64Image(img2);
+                        doc.content.splice(0, 0, {
+                          margin: [30, 0, 0, 12],
+                          columns: [{
+                              image: imgData2,
+                              width: 50,
+                              alignment: 'left',
+                              targets: 0
+                            },
+                            {
+                              width: 'auto',
+                              alignment: 'center',
+                              stack: [{
+                                  text: leyenda,
+                                  margin: [90, 10, 0, 0]
+                                },
+                                {
+                                  text: leyenda1,
+                                  margin: [90, 10, 0, 0]
+                                }
+                              ]
+                            },
+                            {
+                              image: imgData1,
+                              width: 50,
+                              alignment: 'right',
+                              margin: [-70, 0, 0, 12]
+                            }
+                          ]
+                        });
+                        doc.content[1].margin = [0, 0, 70, 0];
+                        table.body.forEach(function(row) {
+                          row.splice(-2); // Eliminar las dos últimas celdas de cada fila
+                        });
+                      },
+                    },
+                    {
+                      extend: 'print',
+                      text: '<i class="bi bi-printer"></i> ',
+                      titleAttr: 'Imprimir',
+                      className: 'btn btn-info',
+                      title: 'Constancias de inglés',
+                      exportOptions: {
+                        columns: ':not(:nth-last-child(-n+3))' // Excluir las tres últimas columnas
+                      },
+                      customize: function(win) {
+                        // Cambiar el tamaño del título
+                        $(win.document.body).find('h1').css('font-size', '20px');
+                        // Centrar el título
+                        $(win.document.body).find('h1').css('text-align', 'center');
+                        // Alinear la tabla a la izquierda
+                        $(win.document.body).find('table').css('margin-left', '0');
+                        // Ajustar el ancho de la segunda columna
+                        $(win.document.body).find('table').find('tr').find('td:nth-child(3)').css('width',
+                          '280px');
+                      }
+                    },
+                  ],
+                  columnDefs: [{
+                    sortable: false,
+                    "class": "index",
+                    width: '5%',
+                    targets: '_none',
+                    visible: true
+                  }],
+                  order: [
+                    [1, 'asc']
+                  ],
+                  fixedColumns: true
+                });
+                oTable.on('order.dt search.dt', function() {
+                  let i = 1;
+                  oTable.cells(null, 0, {
+                    search: 'applied',
+                    order: 'applied'
+                  }).every(function(cell) {
+                    this.data(i++);
+                  });
+                }).draw();
+                // Función para convertir la imagen a base64
+                function getBase64Image(img) {
+                  var canvas = document.createElement("canvas");
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+                  var ctx = canvas.getContext("2d");
+                  ctx.drawImage(img, 0, 0);
+                  var dataURL = canvas.toDataURL("image/png");
+                  return dataURL;
+                }
+              });
+            </script>

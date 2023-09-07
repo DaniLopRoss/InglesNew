@@ -1,0 +1,19 @@
+<div class="container">
+<div class="card1 mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Documento</a></li>
+          <li class="breadcrumb-item active">Registrar nuevo documento</li>
+        </ol>
+        
+<h5 class="text">Nuevo documento </h5>
+</div>
+ <div class="probar">
+<br>
+<%= render "form", documento: @documento %>
+
+<br>
+
+<div>
+  <%= link_to "Regresar a documentos", documentos_path %>
+  

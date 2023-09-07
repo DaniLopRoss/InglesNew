@@ -1,0 +1,108 @@
+<head>
+<%= stylesheet_link_tag "style copy" %>
+</head>
+<div align="center">
+<p style="color: green"><%= notice %></p>
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Documentos</a></li>
+          <li class="breadcrumb-item active">Listar documentos</li>
+        </ol>
+<h4>Documentos</h4>
+
+<div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 
+                  <p class="card-description">
+                    
+                  </p>
+                  <div class="table-responsive pt-3">
+
+                  <table class="table table-bordered" id="tabladocumentos">
+                  <thead class="thead-blue" >
+                    
+                  <tr>
+                  <th></th>
+                  <th scope="col">ID</th>
+                  <th>Nombre</th>
+                  <th>Numero de control</th>
+                  <th>uploads</th>
+                  <th>Acciones</th>
+                   </tr>
+              </thead>
+              
+              <% @@documentos_sin_pago.each do |documento| %>
+              
+                <tr>
+                    <td></td>
+                    <td><%= documento.id %></td>
+                    <td><%= documento.nombre %></td>
+                    <td><%= documento.numero_de_control  %></td>
+                    <td><% documento.uploads.each do |adjunto| %>
+                          <p><%= adjunto.filename.to_s %></p>
+                          <p><%= link_to 'Descargar', rails_blob_path(adjunto.blob, disposition: 'attachment') %></p>
+                        <% end %></td>
+                    
+                    <td>
+                          
+                          
+
+                          <a href="<%= edit_documento_path(documento)%>" class="edit"><i class="bi bi-pencil-square"></i></a>
+                          <a  class="mostrar"  <%= link_to ({:action => :show, :id => documento.id}) do %><i class="bi bi-eye-fill"></i><%end%></a>
+                            <% if current_user.role != 'ingles'%>
+                            <%= link_to 'Agregar Pago', new_payment_path(documento_id: documento.id) %>
+                            <%end%>
+
+                     </a>
+                     </td>
+                     
+                  <%end%>
+
+<script>
+$(document).ready(function() {
+              var oTable = $("#tabladocumentos").DataTable({
+                language: {
+                  url: '//cdn.datatables.net/plug-ins/1.13.1/i18n/es-MX.json'
+              },
+
+          responsive: "true",
+          dom: 'Bfrtilp',    
+                buttons:[ 
+        {
+          extend:    'excelHtml5',
+          text:      '<i class="bi bi-file-earmark-excel"></i> ',
+          titleAttr: 'Exportar a Excel',
+          className: 'btn btn-success'
+        },
+        {
+          extend:    'pdfHtml5',
+          text:      '<i class="bi bi-file-earmark-pdf"></i> ',
+          titleAttr: 'Exportar a PDF',
+          className: 'btn btn-danger'
+        },
+        {
+          extend:    'print',
+          text:      '<i class="bi bi-printer"></i> ',
+          titleAttr: 'Imprimir',
+          className: 'btn btn-info'
+        },
+      ],
+                columnDefs: [ {
+            sortable: false,
+            "class": "index",
+            targets: 0
+        } ],
+        order: [[ 1, 'asc' ]],
+        fixedColumns: true
+        } );
+ 
+    oTable.on( 'order.dt search.dt', function () {
+        oTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+            }); 
+
+                
+            </script>
+                  

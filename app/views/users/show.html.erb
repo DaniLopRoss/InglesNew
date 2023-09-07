@@ -1,0 +1,78 @@
+<div class="container">     <head>
+<%= stylesheet_link_tag "style" %>
+
+<div class="container">
+<div class="card mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Usuario</a></li>
+          <li class="breadcrumb-item active">Caracteristicas del usuario</li>
+        </ol>
+                  <h5 class="text">Usuario  <%= @user.id%> </h5>
+
+</div>
+ <div class="probar">
+
+                
+
+                      
+
+                           <div class="form-group row ">
+                           <%= label :nombre ,'Nombre:', class:'col-sm-4'%>
+                           <div class="col-sm-4">
+                           <%= @user.nombre%>
+                           </div>
+                  </div>
+
+                           <div class="form-group row">
+                           <%= label :apellido_uno ,'Primer apellido', class:'col-sm-4'%>
+                           <div class="col-sm-4">
+                           <%= @user.apellido_uno%>
+                           </div>
+                           </div>
+
+                           <div class="form-group row">
+                           <%= label :apellido_dos ,'Segundo apellido', class:'col-sm-4'%>
+                           <div class="col-sm-4">
+                           <%= @user.apellido_dos%>
+                           </div>
+                       </div>
+
+                       <div class="form-group row">
+                           <%= label :Role ,'Role', class:'col-sm-4'%>
+                           <div class="col-sm-4">
+                           <%= @user.role%>
+                           </div>
+                       </div>
+
+
+                       <div class="form-group row">
+                       <%= label :Email ,'Correo', class:'col-sm-4'%>
+                       <div class="col-sm-4">
+                       <%= @user.email %>
+                           
+                       
+                       </div>
+                            </div>
+                          
+
+                          
+                             <br>
+                             <br>
+           
+                              <div> 
+
+                                      
+                              <%= button_to 'Eliminar', { :action => :destroy, :id => @user.id}, :data => { :confirm => 'Esta seguro?' }, :method => :delete,  class: "btn btn-danger btn-eliminar"%>
+
+                             <%= link_to 'Regresar', url_for(:back),  class: "btn btn-success btn-xs round btn-regresar"%>
+                                </div>
+                                  <br>
+                                  <br>
+                             
+                          </div>
+                      </section>
+                  </div>
+              </div>
+
+

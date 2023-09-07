@@ -1,0 +1,68 @@
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="form-group row" >
+  <%= f.label :nombre,'Nombre ', class:'col-sm-2' %>
+  <div class="col-sm-4">
+  <%= f.text_field :nombre, autofocus: true %>
+  </div>
+  </div>
+
+
+<div class="form-group row">
+    <%= f.label :apellido_uno,'apellido paterno', class:'col-sm-2' %>
+    <div class="col-sm-4">
+    <%= f.text_field :apellidouno, class:"input" %>
+  </div>
+
+  <div class="form-group row">
+    <%= f.label :apellido_dos ,'apellido materno', class:'col-sm-2'%>
+    <div class="col-sm-4">
+    <%= f.text_field :apellidodos, class:"input" %>
+    </div>
+  </div>
+
+  <div class="form-group row">
+  <%= f.label :role ,'Rol',   class:'col-sm-2'%>
+  <div class="col-sm-4">
+  <%= f.text_field :role, class:"input" %>
+  </div>
+    </div>
+
+
+  
+  <div class="form-group row">
+    <%= f.label :email , 'Correo' ,  class:'col-sm-2'%>
+    <div class="col-sm-4">
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+</div>
+  </div>
+
+  <div class="form-group row">
+    <%= f.label :password,'Contraseña',  class:'col-sm-2' %>
+    <div class="col-sm-4">
+    <% if @minimum_password_length %>
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "new-password" %>
+  </div>
+</div>
+
+
+
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

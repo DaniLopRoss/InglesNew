@@ -1,0 +1,264 @@
+<head>
+  <%= stylesheet_link_tag "style" %>
+  <img src="/assets/logo.png" alt="Logo" class="logo-hidden">
+  <img src="/assets/logo2.png" alt="Logo2" class="logo-hidden">
+</head>
+<div align="center">
+  <p style="color: green"><%= notice %></p>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Constancias de Inglés</a></li>
+    <li class="breadcrumb-item active">Listar constancias</li>
+  </ol>
+  <h4 class="consI">CONSTANCIAS DE INGLÉS</h4>
+
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+
+        <p class="card-description">
+
+        </p>
+        <div class="table-responsive pt-3">
+
+          <table class="table table-bordered" id="tabladocumentos">
+            <thead class="thead-blue">
+
+              <tr>
+                <th>No.</th>
+                <th scope="col">No.Folio</th>
+                <th>Nombre</th>
+                <th>Número de control</th>
+                <th>Documento</th>
+                <th>Estatus</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <% @documentos.each do |documento| %>
+
+            <tr>
+              <td></td>
+              <td><%= documento.no_oficio %></td>
+              <td><%= documento.nombre %></td>
+              <td><%= documento.numero_de_control  %></td>
+              <td><% documento.uploads.each do |adjunto| %>
+                <p><%= adjunto.filename.to_s %></p>
+                <%= link_to '', rails_blob_path(adjunto.blob, disposition: 'attachment'), target: '_blank', class: 'bi bi-download download-icon tooltip-test', title: 'Descargar' %>
+                <%= link_to '', rails_blob_path(adjunto.blob, disposition: 'inline'), target: '_blank', class: 'bi bi-file-earmark-pdf pdf-icon' %>
+
+                <% end %></td>
+              <td><%= documento.payment ? documento.payment.status : "SIN PAGO" %></td>
+              <td>
+
+              <div style="display: flex; gap: 10px; align-items: center;">
+              <% if current_user.role == "gestion" || current_user.role == "ingles" %>
+              <% if current_user.role == "gestion" %>
+                <%= form_for(documento, url: documento_path(documento), method: :patch) do |f| %>
+                  <%= f.check_box :status, { class: 'form-check-input check', onchange: 'this.form.submit()', disabled: (documento.payment.commentp.present? ? true : false), disabled: true  } %>
+                <% end %>
+              <% else %>
+                <%= form_for(documento) do |f| %>
+                  <%= f.check_box :status, { class: 'form-check-input', disabled: true } %>
+                <% end %>
+              <% end %>
+            <% end %>
+
+            
+
+                <% if current_user.role == 'administrador'%>
+                <a href="<%= edit_documento_path(documento)%>" class="edit"><i class="bi bi-pencil-square"></i></a>
+                <%end%>
+                <a class="mostrar" <%= link_to ({:action => :show, :id => documento.id}) do %><i
+                  class="bi bi-eye-fill"></i><%end%></a>
+                    
+
+                    <%  if can? :destroy, @user %>
+                <a class="eliminar" <%= link_to ({ :action => :destroy, :id => documento.id })do%> <i
+                  class="bi bi-trash"></i>
+                  <%end%>
+                  <% end %>
+                </a>
+                
+                </div>
+              </td>
+
+              <%end%>
+              <% if current_user.role == "financieros" %>
+              <%= link_to 'Constancias pagadas', payments_path %>
+              <%end %>
+
+             
+
+              <% if current_user.role == 'gestion' %>
+              <a href="<%= documentos_path%>" class="new"><i class="bi bi-plus-circle-fill"></i></a>
+              <%end %>
+              <% if current_user.role == 'ingles'%>
+              <%= link_to 'Constancias de inglés', documentos_path %>
+              <%end %>
+              
+
+
+              <script>
+    $(document).ready(function() {
+      
+      var logo = '/assets/logo.png';
+      var logo2 = '/assets/logo2.png';
+      var printableColumns = ':not(:last-child)';
+      var leyenda = 'TECNOLÓGICO NACIONAL DE MÉXICO';
+      var leyenda1 = 'Instituto Tecnológico de Oaxaca';
+      var oTable = $("#tabladocumentos").DataTable({
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.1/i18n/es-MX.json'
+        },
+        autoWidth: false, // desactivar ajuste automático de ancho
+        order: [
+          [1, 'asc']
+        ],
+        responsive: "true",
+        dom: 'Bfrtilp',
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="bi bi-file-earmark-excel"></i> ',
+            titleAttr: 'Exportar a Excel',
+            title: 'Constancias de inglés',
+            className: 'btn btn-success',
+            exportOptions: {
+            columns: ':not(:nth-last-child(-n+2))' // Excluir las dos últimas columnas
+           }
+          },
+          {
+            extend: 'pdfHtml5',
+            text: '<i class="bi bi-file-earmark-pdf"></i> ',
+            titleAttr: 'Exportar a PDF',
+            className: 'btn btn-danger',
+            title: 'Constancias de inglés',
+            customize: function(doc) {
+              var table = doc.content[1].table;
+              var columnWidths = ['10%', '10%', '30%', '30%', '25%'];
+              doc.content[0].fontSize = 12;
+              doc.content[0].alignment = 'center';
+              doc.content[0].absolutePosition = {x: 32, y: 110};
+              doc.content[0].width = '100%';
+              doc.content[1].margin = [10, 40, 20, 500]; //tabla 40 arriba
+              doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+              table.widths = columnWidths;
+              
+              doc.content[1].table.alignment = 'center';
+              var img1 = new Image();
+              img1.src = logo;
+              var imgData1 = getBase64Image(img1);
+              var img2 = new Image();
+              img2.src = logo2;
+              var imgData2 = getBase64Image(img2);
+
+              doc.content.splice(0, 0, {
+                margin: [30, 0, 0, 12],
+                columns: [
+                  {
+                    image: imgData2,
+                    width: 50,
+                    alignment: 'left',
+                    targets: 0
+                  },
+                  {
+                    width: 'auto',
+                    alignment: 'center',
+                    stack: [
+                    
+                      { text: leyenda, margin: [90, 10, 0, 0] },
+                      { text: leyenda1, margin: [90, 10, 0, 0] }
+                    ]
+                  },
+                  {
+                    image: imgData1,
+                    width: 50,
+                    alignment: 'right',
+                    margin: [-70, 0, 0, 12]
+                  }
+                ]
+              });
+              doc.content[1].margin = [0, 0, 70, 0];
+              table.body.forEach(function(row) {
+                row.splice(-2); // Eliminar las dos últimas celdas de cada fila
+              });
+            },
+            
+          },
+          {
+            extend: 'print',
+            text: '<i class="bi bi-printer"></i> ',
+            titleAttr: 'Imprimir',
+            className: 'btn btn-info',
+            title: 'Constancias de inglés',
+            exportOptions: {
+              columns: ':not(:nth-last-child(-n+2))' // Excluir las dos últimas columnas
+            },
+            customize: function (win) {
+    // Cambiar el tamaño del título
+    $(win.document.body).find('h1').css('font-size', '20px');
+    // Centrar el título
+    $(win.document.body).find('h1').css('text-align', 'center');
+
+    // Alinear la tabla a la izquierda
+    $(win.document.body).find('table').css('margin-left', '0');
+
+    // Ajustar el ancho de la segunda columna
+            $(win.document.body).find('table').find('tr').find('td:nth-child(2)').css('width', '120px');
+
+            $(win.document.body).find('table').find('tr').find('td:nth-child(4)').css('width', '78px');
+
+           
+            $(win.document.body).find('table').find('tr').find('td:nth-child(3)').css({
+              'white-space': 'normal',
+              'word-wrap': 'break-word',
+              'word-break': 'break-all'
+            });
+
+            $(win.document.body).find('table').find('tr').css('height', '40px');
+            $(win.document.body).find('table').find('tr').find('td:nth-child(2)').css({
+    'white-space': 'normal',
+    'word-wrap': 'break-word',
+    'word-break': 'break-all'
+  });
+  }
+            
+            
+          },
+        ],
+        columnDefs: [{
+          sortable: false,
+          "class": "index",
+          width: '5%', 
+          targets: '_none',
+          visible: true
+        }],
+        order: [
+          [1, 'asc']
+        ],
+        fixedColumns: true
+      });
+
+      oTable.on('order.dt search.dt', function() {
+        let i = 1;
+ 
+        oTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+            this.data(i++);
+        });
+    }).draw();
+      
+      // Función para convertir la imagen a base64
+      function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+        return dataURL;
+      }
+    });
+  </script>
+  
+  
+
+             

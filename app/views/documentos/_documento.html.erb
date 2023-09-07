@@ -1,0 +1,116 @@
+<div id="<%= dom_id documento %>">
+
+    <p>
+        <strong>Número de control:</strong>
+        <%= documento.numero_de_control %>
+    </p>
+
+    <p>
+        <strong>Nombre:</strong>
+        <%= documento.nombre %>
+    </p>
+    <p>
+        <strong>Nombre del archivo:</strong>
+        <% @documento.uploads.each do |adjunto| %>
+        <%= adjunto.filename.to_s %>
+
+        <% end %>
+
+        <div id="document-info-toggle">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>Información del documento</span>
+        </div>
+
+        <div id="document-info" style="display: none;">
+            <div class="cuadro">
+                
+                <p>Subido por inglés | usuario: <%= @documento.user.nombre %> <%= @documento.user.apellido_uno %> <%= @documento.user.apellido_dos %> | Fecha: <%= @documento.created_at.in_time_zone("Mexico City").strftime("%Y-%m-%d %H:%M:%S") %></p>
+                <p>
+                <% if @documento.status == true %>
+                  Verificó el departamento de gestión y vinculación | usuario: <%= @user_name %> | Fecha: <%= @documento_date %>
+                <% end %>
+              </p>
+              
+             
+                <p>MD5: <%= @documento.md5 %></p>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div id="document-comment-toggle">
+  <i class="bi bi-chat-left-text-fill"></i>
+  <span>Agregar comentario</span>
+</div>
+
+<div id="document-comment" style="display: none;">
+  <div class="form-container1" >
+    <% if documento.comment.present? || (@documento.payment.present? && @documento.payment.commentp.present?) %>
+      <%= form_with(model: @documento, url: documento_path(@documento), method: :patch) do |form| %>
+        <%= form.text_area :comment, class: "text-area", value: @documento.comment, disabled: true %>
+        <%= form.submit "Guardar", class: "submit-button1", disabled: (documento.comment.present? || (@documento.payment.present? && @documento.payment.commentp.present?)) %>
+      <% end %>
+    <% else %>
+      <%= form_with(model: @documento, url: documento_path(@documento), method: :patch) do |form| %>
+        <%= form.text_area :comment, class: "text-area" %>
+        <%= form.submit "Guardar", class: "submit-button1" %>
+      <% end %>
+    <% end %>
+
+    <% latest_audit = Audit.where(auditable_type: "Documento", auditable_id: @documento.id).last %>
+    <% if latest_audit.present? && latest_audit.user_id.present? %>
+      <% user = User.find_by(id: latest_audit.user_id) %>
+      <% if user.present? %>
+        <p class="comentario">Comentario realizado por: <%= user.nombre %> <%= user.apellido_uno %></p>
+      <% end %>
+    <% end %>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+
+<p>
+</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#document-info-toggle").click(function() {
+            $("#document-info").toggle();
+        });
+    });
+</script>
+
+<script>
+$(document).ready(function() {
+    $("#document-comment-toggle").click(function() {
+        $("#document-comment").toggle();
+    });
+});
+</script>

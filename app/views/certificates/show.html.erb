@@ -1,0 +1,25 @@
+<div class="container">
+<div class="card mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Firma</a></li>
+          <li class="breadcrumb-item active">Firma registrado documento</li>
+        </ol>
+        
+<h5 class="text">Firma registrada al documento </h5>
+</div>
+ <div class="probar">
+
+<%= render @certificate %>
+
+<div>
+<% if current_user.role =='administrador'%>
+  <%= button_to 'Eliminar', { :action => :destroy, :id => @certificate.id}, :data => { :confirm => 'Esta seguro?' }, :method => :delete,  class: "btn btn-danger btn-eliminar"%>
+
+  <%= link_to 'Regresar', url_for(:back),  class: "btn btn-success btn-xs round btn-regresar"%>
+  <%end %>
+</div>
+
+<%= link_to "Regresar a constancias firmadas", certificates_path %>
+<br>
+</br>

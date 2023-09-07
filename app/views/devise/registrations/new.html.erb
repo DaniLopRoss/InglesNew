@@ -1,0 +1,85 @@
+    <head>
+      <%= stylesheet_link_tag  "prueba" %>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    </head>
+    <div class="container">
+
+      <div class="card mt-5">
+        <div class="card-header">
+
+          <h5 class="text">Registrar Usuario </h5>
+        </div>
+        <div class="form-img">
+          <div class="form-img">
+            <%= image_tag "registro.jpg" %>
+            <br>
+          </div>
+        </div>
+        <div class="probar">
+          <br>
+          <div class="probar1">
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <div class="form-group row">
+              <%= f.label :nombre,"Nombre:", class:'col-sm-2'  %><br />
+              <div class="col-sm-8">
+                <%= f.text_field :nombre, autofocus: true, autocomplete: "Nombre", class:"form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= f.label :apellido_uno,"Apellido uno:", class:'col-sm-2'  %><br />
+              <div class="col-sm-8">
+                <%= f.text_field :apellido_uno, autofocus: true, autocomplete: "Apellido paterno" , class:"form-control"%>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= f.label :apellido_dos,"Apellido dos:", class:'col-sm-2'  %><br />
+              <div class="col-sm-8">
+                <%= f.text_field :apellido_dos, autofocus: true, autocomplete: "Apellido materno", class:"form-control" %>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= f.label :role, "Rol:", class:'col-sm-2'  %><br />
+              <div class="col-sm-8">
+                <%= f.select :role, ["administrador", "ingles", "financieros", "servicios", "direccion"], prompt: "Seleccione el rol" , class:"form-control"%>
+              </div>
+            </div>
+            <div class="form-group row">
+              <%= f.label :email,"Correo:", class:'col-sm-2'  %><br />
+              <div class="col-sm-8">
+                <%= f.email_field :email, autofocus: true, autocomplete: "email" , class:"form-control"%>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= f.label :password,"Contraseña:", class:'col-sm-2' %>
+
+              <div class="col-sm-8">
+                <%= f.password_field :password, autocomplete: "new-password" , class:"form-control"%>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <%= f.label :password_confirmation ,"Confirmar:", class:'col-sm-2' %><br />
+              <div class="col-sm-8">
+                <%= f.password_field :password_confirmation, autocomplete: "new-password" , class:"form-control"%>
+              </div>
+            </div>
+            <br>
+            </br>
+            <div class="actions">
+              <%= f.submit "Registrarse ", class: "btn btn-primary" %>
+              <%= link_to 'Cancelar', url_for(:back), class: "btn btn-warning" %>
+            </div>
+            <% end %>
+          </div>
+          <script>
+            function mayus(e) {
+              e.value = e.value.toUpperCase();
+            }
+          </script>

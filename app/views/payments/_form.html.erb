@@ -1,0 +1,50 @@
+<%= form_with(model: payment) do |form| %>
+<% if payment.errors.any? %>
+<div style="color: red">
+
+  <div id="error_explanation">
+    <ul>
+      <% payment.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
+
+  <div class="form-group row hidden-div">
+    <%= form.label :documento_id,"ID",class:'col-sm-2' %>
+    <div class="col-sm-4">
+      <% if @documento %>
+      <%= form.hidden_field :documento_id, value: @documento.id %>
+      <% else %>
+      <p>Error: el documento no está disponible.</p>
+      <% end %>
+
+    </div>
+  </div>
+<p>
+</p>
+  <div class="form-group row hidden-div">
+    <%= form.label :uploads,"Subir documento" ,class:'col-sm-2'%>
+    <div class="col-sm-4">
+      <%= form.file_field :uploads, multiple: true, class: "form-control" %>
+    </div>
+  </div>
+
+
+  <div class="form-group row">
+  <%= form.label :referencia,"Referencia" ,class:'col-sm-2'%>
+  <div class="col-sm-4">
+    <%= form.text_field :referencia,class: "form-control" %>
+  </div>
+</div>
+
+<div class="form-group row">
+<%= form.label :status, "Estatus", class: 'col-sm-2' %>
+<div class="col-sm-4">
+  <%= form.select :status, ["PAGADO"], { prompt: "Seleccione el estado" }, required: true %>
+</div>
+</div>
+
+
+  <button class="btn btn-info" <%= form.submit %> Guardar </button> <% end %>

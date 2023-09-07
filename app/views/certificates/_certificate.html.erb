@@ -1,0 +1,112 @@
+<div id="<%= dom_id certificate %>">
+
+  <p>
+    <strong>Nombre del alumno: </strong>
+    <% if @certificate.documento %>
+    <%= @certificate.documento.numero_de_control %>
+    <% else %>
+    Documento no encontrado
+    <% end %>
+  </p>
+
+  <p>
+    <strong>Número de control: </strong>
+    <% if @certificate.documento %>
+    <%= @certificate.documento.nombre %>
+    <% else %>
+    Documento no encontrado
+    <% end %>
+
+  </p>
+  <p>
+    <strong>Carrera: </strong>
+    <% if @certificate.documento.present? %>
+    <%= @certificate.documento.carrera %>
+    <% else %>
+    <p>El documento no está disponible.</p>
+    <% end %>
+
+  </p>
+  <p>
+    <strong>Fecha: </strong>
+    <% if @certificate && @certificate.documento %>
+    <%= @certificate.documento.created_at %>
+    <% else %>
+    <p>No se encontró el certificado solicitado.</p>
+    <% end %>
+
+  </p>
+  <p>
+
+    <strong>Nombre del archivo:</strong>
+
+    <% @certificate.uploads.each do |upload| %>
+    <p><%= upload.blob.filename %></p>
+
+    <% if certificate.titulacion.present? %>
+    <strong>Fecha de titulación:</strong>
+     <%= certificate.titulacion %>
+<% end %>
+
+    <br>
+
+    <%= link_to '', rails_blob_path(upload.blob, disposition: 'attachment'), target: '_blank', class: 'bi bi-download download-icon tooltip-test', title: 'Descargar' %>
+    <%= link_to '', rails_blob_path(upload.blob, disposition: 'inline'), target: '_blank', class: 'bi bi-file-earmark-pdf pdf-icon' %>
+
+    <%end%>
+
+    <div id="document-info-toggle">
+      <i class="bi bi-info-circle-fill"></i>
+      <span>Información del documento</span>
+    </div>
+
+    <div id="document-info" style="display: none;">
+      <div class="cuadro">
+        <p>Subido por coordinación de lenguas extrajeras <% if @certificate.user %> | usuario: <%= @certificate.user.nombre %> <%= @certificate.user.apellido_uno %> <%= @certificate.user.apellido_dos %> | Fecha:<%= certificate.created_at.in_time_zone("Mexico City").strftime("%Y-%m-%d %H:%M:%S") %>
+        <% end %></p>
+        <p>
+              <% if @certificate.documento.status == true %>
+                Verificó el departamento de gestión y vinculación | usuario: <%= @user_name %> | Fecha: <%= @documento_date  %>
+              <% end %>
+            </p>
+          <p>
+          <% if @certificate.payment.verificar == true %>
+          Dirección verificó el documento | usuario: <%= @user_namepayment %> | Fecha: <%= @payment_date %>
+          <% end %>
+        </p>
+        
+
+        <% if @payment.verificarsub == true %>
+        <% if @user_updated_payment.present? %>
+  <p>Verificó subdireccion | usuario:  <%= @user_updated_payment.nombre %> <%= @user_updated_payment.apellido_uno %> | Fecha: <%= @updated_at_payment.strftime("%Y-%m-%d %H:%M:%S") %></p>
+
+  <!-- Aquí puedes mostrar otros datos relevantes del usuario que actualiza en payments -->
+<% else %>
+  <p>No se encontraron datos del usuario que actualizó en payments.</p>
+<% end %>
+<% end %>
+
+        <% if certificate.payment %>
+        <p class="payment-info">Estatus de pago: <%= certificate.payment.status %></p>
+        <% end %>
+        <% if certificate.payment %>
+        <p class="payment-info">validado por <%= certificate.payment.user.nombre %></p>
+        <% end %>
+
+        <% if certificate.documento %>
+        <p>MD5: <%= @certificate.documento.md5 %></p>
+        <% end %>
+      </div>
+    </div>
+    <p>
+    </p>
+
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("#document-info-toggle").click(function() {
+      $("#document-info").toggle();
+    });
+  });
+</script>

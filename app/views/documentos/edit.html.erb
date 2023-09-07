@@ -1,0 +1,19 @@
+<div class="container">
+<div class="card mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Documento</a></li>
+          <li class="breadcrumb-item active">Editar documento</li>
+        </ol>
+        
+<h4 class="text">Editar documento </h4>
+</div>
+ <div class="probar">
+<%= render "form", documento: @documento %>
+
+<br>
+
+<div>
+  <%= link_to "Ver documento", @documento %> |
+  <%= link_to "Regresar a documentos", documentos_path %>
+</div>

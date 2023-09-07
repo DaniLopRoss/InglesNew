@@ -1,0 +1,6 @@
+financieros:
+  email: financieros@example.com
+  nombre: Financieros
+  apellido_uno: ApellidoUno
+  apellido_dos: ApellidoDos
+  role: financieros

@@ -1,0 +1,60 @@
+<head>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+</head>
+<div class="container">
+<div class="card1 mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+<li class="breadcrumb-item">Registrar fecha</li>
+          <li class="breadcrumb-item active">Registrar fecha de titulación</li>
+        </ol>
+        
+<h5 class="text">Fecha de titulación</h5>
+</div>
+ <div class="probar">
+
+<br>
+
+    <p>
+        <strong>Nombre:</strong>
+        <%= @certificate.documento.nombre %>
+    </p>
+
+    <p>
+        <strong>Número de control:</strong>
+        <%= @certificate.documento.numero_de_control %>
+    </p>
+
+
+    <%= form_with(model: @certificate, url: update_fecha_titulacion_certificate_path(@certificate), method: :patch) do |form| %>
+      <div class="form-group row">
+      <%= form.label :titulacion, '<strong>Fecha de titulación:</strong>'.html_safe, class: "col-sm-2" %>
+
+        <div class="col-sm-4">
+        <%= form.date_field :titulacion, class: "form-control", min: Date.today, required: true, id:"datepicker" %>
+
+        </div>
+      </div>
+    
+      <%= form.hidden_field :id %>
+    
+      <br>
+      <div class="form-group">
+        <%= form.submit "Guardar", class: "btn btn-info" %>
+      </div>
+    <% end %>
+    
+    <br>
+  
+    <%= link_to "Regresar a constancias ", edit_fecha_titulacion_certificate_path %> 
+    
+
+<br>
+
+<script>
+
+
+</script>

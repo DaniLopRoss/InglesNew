@@ -1,0 +1,119 @@
+<div id="<%= dom_id payment %>">
+
+  <p>
+    <strong>Nombre:</strong>
+    <%= payment.documento.nombre %>
+  </p>
+
+  <p>
+
+    <strong>Nombre del archivo:</strong>
+    <% @payment.documento.uploads.each do |adjunto| %>
+    <%= adjunto.filename.to_s %>
+    <% end %>
+    <p>
+      <p>
+        <strong>Número de control:</strong>
+        <%= payment.documento.numero_de_control%>
+
+        <p>
+          <strong>Referencia de pago:</strong>
+          <%= payment.referencia %>
+
+          <p>
+            <strong>Estatus de pago:</strong>
+            <%= payment.status %>
+          </p>
+
+          <div id="document-info-toggle">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>Información del documento</span>
+          </div>
+
+          <div id="document-info" style="display: none;">
+            <div class="cuadro">
+              <p>Subido por coordinación de lenguas extranjeras | Subido por el usuario:
+                <%= payment.documento.user.nombre if payment.documento.user %>
+                <%= payment.documento.user.apellido_uno if payment.documento.user %>
+                <%= payment.documento.user.apellido_dos if payment.documento.user %> | Fecha:
+                <%= payment.documento.created_at.in_time_zone("Mexico City").strftime("%Y-%m-%d %H:%M:%S") %>
+              </p>
+              <p>
+                <% if @payment.documento.status == true %>
+                Verificó el departamento de gestión y vinculación | usuario: <%= @user_name %> | Fecha:
+                <%= @documento_date  %>
+                <% end %>
+              </p>
+              <p>
+                <% if @payment.verificar == true %>
+                Dirección verificó el documento | usuario: <%= @user_namepayment %> | Fecha: <%= @payment_date %>
+                <% end %>
+              </p>
+
+              <% if @payment.verificarsub == true %>
+              <% if @user_updated_payment.present? %>
+              <p>Verificó subdireccion | usuario: <%= @user_updated_payment.nombre %>
+                <%= @user_updated_payment.apellido_uno %> | Fecha:
+                <%= @updated_at_payment.strftime("%Y-%m-%d %H:%M:%S") %></p>
+
+              <!-- Aquí puedes mostrar otros datos relevantes del usuario que actualiza en payments -->
+              <% else %>
+              <p>No se encontraron datos del usuario que actualizó en payments.</p>
+              <% end %>
+              <% end %>
+
+              <p class="payment-info">Estatus de pago: <%= payment.status %></p>
+              <p class="payment-info">validado por <%= payment.user.nombre if payment.user.present? %>
+                <%= payment.user.apellido_uno if payment.user.present? %> | Fecha:
+                <%= payment.created_at.in_time_zone("Mexico City").strftime("%Y-%m-%d %H:%M:%S") %></p>
+              <p>MD5: <%= payment.documento.md5 %></p>
+            </div>
+          </div>
+          <p>
+          </p>
+
+          <div id="document-comment-toggle">
+            <i class="bi bi-chat-left-text-fill"></i>
+            <span>Agregar comentario</span>
+          </div>
+          <div id="document-comment" style="display: none;">
+  <div class="form-container1">
+    <%= form_with(model: @payment, url: payment_path(@payment), method: :patch) do |form| %>
+      <% if @payment.commentp.present? %>
+        <%= form.text_area :commentp, class: "text-area", disabled: true %>
+        <%= form.submit "Guardar", class: "submit-button1", disabled: true %>
+        
+        <% latest_audit = Audit.where(auditable_type: "Payment", auditable_id: @payment.id).last %>
+        <% if latest_audit.present? && latest_audit.user_id.present? %>
+          <% user = User.find_by(id: latest_audit.user_id) %>
+          <% if user.present? %>
+            <p class="comentario">Comentario realizado por: <%= user.nombre %> <%= user.apellido_uno %></p>
+          <% end %>
+        <% end %>
+        
+      <% else %>
+        <%= form.text_area :commentp, class: "text-area" %>
+        <%= form.submit "Guardar", class: "submit-button1" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("#document-info-toggle").click(function() {
+      $("#document-info").toggle();
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#document-comment-toggle").click(function() {
+      $("#document-comment").toggle();
+    });
+  });
+</script>

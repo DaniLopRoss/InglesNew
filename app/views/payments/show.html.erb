@@ -1,0 +1,27 @@
+<div class="container">
+<div class="card mt-5">
+<div class="card-header">
+<ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Pago</a></li>
+          <li class="breadcrumb-item active">Pago registrado </li>
+        </ol>
+        
+<h5 class="text">Pago <%= @payment.id%>  </h5>
+</div>
+ <div class="probar">
+
+<%= render @payment %>
+
+<div>
+<% if current_user.role =='administrador'%>
+<%= button_to 'Eliminar', { :action => :destroy, :id => @payment.id}, :data => { :confirm => 'Esta seguro?' }, :method => :delete,  class: "btn btn-danger btn-eliminar"%>
+
+<%= link_to 'Regresar', url_for(:back),  class: "btn btn-success btn-xs round btn-regresar"%>
+<%end %>
+<p>
+</p>
+<%= link_to "Regresar a constancias pagadas", payments_path %>
+<br>
+</br>
+</div>
+
